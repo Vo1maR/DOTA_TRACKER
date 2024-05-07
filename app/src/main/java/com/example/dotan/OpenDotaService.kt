@@ -20,4 +20,6 @@ interface OpenDotaService {
     @GET("heroStats")
     suspend fun getHeroes(): List<HeroInfo>
 
+    @GET("players/{account_id}")
+    suspend fun getPlayerSummary(@Path("account_id") accountId: Int): PlayerSummaryResponse
 }

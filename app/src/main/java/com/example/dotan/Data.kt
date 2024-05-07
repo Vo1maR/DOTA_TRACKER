@@ -122,7 +122,10 @@ data class HeroInfo(
     val primary_attr: String,
     val img: String
 )
-
+data class PlayerProfile(val accountId: Int, val name: String)
+data class PlayerSummaryResponse(
+    val profile: Player // Assuming Player data class from previous steps
+)
 suspend fun buildHeroMap(): Map<Int, HeroInfo>
 {
     val heroData = try {
