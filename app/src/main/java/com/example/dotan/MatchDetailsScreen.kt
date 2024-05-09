@@ -12,31 +12,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
 import com.android.volley.toolbox.ImageRequest
+import com.example.dotan.viewModel.PlayerViewModel
 import kotlinx.coroutines.launch
 import openDotaService
 
 @Composable
 fun MatchDetailsScreen(navController: NavHostController, matchId: Long?) {
-    var matchDetails by remember { mutableStateOf<MatchDetailsResponse?>(null) }
     var isLoading by remember { mutableStateOf(false) }
 
-    LaunchedEffect(key1 = matchId) {
-        if (matchId != null) {
-            isLoading = true
-            try {
-                matchDetails = openDotaService.getMatchDetails(matchId)
-            } catch (e: Exception) {
-                println("Error fetching match details: ${e.message}")
-            } finally {
-                isLoading = false
-            }
-        }
+    val viewModel: PlayerViewModel = hiltViewModel()
+    LaunchedEffect(matchId) {
+        viewModel.getMatchDetails(matchId!!)
     }
 
-    if (isLoading) {
+    val matchDetails = viewModel.matchDetails.collectAsState().value
+
+    if (isLoading && matchDetails == null) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             CircularProgressIndicator()
         }

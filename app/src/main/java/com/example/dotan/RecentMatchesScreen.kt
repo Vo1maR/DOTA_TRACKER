@@ -15,6 +15,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -22,28 +23,25 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
+import com.example.dotan.viewModel.PlayerViewModel
 import openDotaService
 
 @Composable
 fun RecentMatchesScreen(navController: NavHostController, accountId: String?) {
-    var matches by remember { mutableStateOf(emptyList<PlayerMatch>()) }
+
     var isLoading by remember { mutableStateOf(true) }
 
-    LaunchedEffect(key1 = accountId) {
-        if (accountId != null) {
-            try {
-                matches = openDotaService.getPlayerMatches(accountId.toInt())
-                isLoading = false
-            } catch (e: Exception) {
-                // Handle error
-                println("Error fetching matches: ${e.message}")
-            }
-        }
+    val viewModel: PlayerViewModel = hiltViewModel()
+    LaunchedEffect(accountId) {
+        viewModel.getPlayerMatches(accountId!!.toInt())
     }
 
-    if (isLoading) {
+    val matches = viewModel.matches.collectAsState().value
+
+        if (isLoading && matches == null) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             CircularProgressIndicator()
         }

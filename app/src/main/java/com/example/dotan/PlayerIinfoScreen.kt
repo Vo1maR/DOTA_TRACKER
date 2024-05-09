@@ -14,40 +14,35 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
 import com.android.volley.toolbox.ImageRequest
+import com.example.dotan.viewModel.PlayerViewModel
 import kotlinx.coroutines.launch
 import openDotaService
 
 @Composable
 fun PlayerInfoScreen(navController: NavHostController, accountId: String?) {
-    var playerInfo by remember { mutableStateOf<PlayerResponse?>(null) }
-    var isLoading by remember { mutableStateOf(true) }
-    val imageUri = remember(playerInfo?.profile?.avatar) {
+    val viewModel: PlayerViewModel = hiltViewModel()
+    LaunchedEffect(accountId) {
+        viewModel.getPlayerData(accountId!!.toInt())
+        viewModel.getPlayerWinLoss(accountId!!.toInt())
+    }
+
+    Log.d("player", viewModel.getPlayerData(accountId!!.toInt()).toString())
+    val playerInfo = viewModel.playerInfo.collectAsState().value
+    val imageUri = remember(playerInfo?.profile?.avatarfull) {
         playerInfo?.profile?.avatarfull?.let { Uri.parse(it) }
     }
-    var winLossInfo by remember { mutableStateOf<PlayerWinLossResponse?>(null) }
+    var isLoading by remember { mutableStateOf(true) }
+
+    var winLossInfo = viewModel.winLossInfo.collectAsState().value
     val sharedPreferences = LocalContext.current.getSharedPreferences("favorites", Context.MODE_PRIVATE)
     var isFavorite by remember { mutableStateOf(sharedPreferences.contains("favorite_account_id_${accountId}")) }
 
-    LaunchedEffect(key1 = accountId) {
-        if (accountId != null) {
-            try {
-                playerInfo = openDotaService.getPlayerInfo(accountId.toInt())
-                winLossInfo = openDotaService.getPlayerWinLoss(accountId.toInt())
-                isLoading = false
 
-                // Initialize isFavorite state here after fetching data
-                isFavorite = sharedPreferences.contains("favorite_account_id_${playerInfo!!.profile.account_id}")
-            } catch (e: Exception) {
-                println("Error fetching player info: ${e.message}")
-                isLoading = false
-            }
-        }
-    }
-
-    if (isLoading) {
+    if (isLoading && playerInfo == null) {
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
@@ -55,6 +50,7 @@ fun PlayerInfoScreen(navController: NavHostController, accountId: String?) {
             CircularProgressIndicator()
         }
     } else if (playerInfo != null) {
+        isLoading = false
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
