@@ -1,5 +1,6 @@
 package com.example.dotan.repository
 
+import com.example.dotan.HeroInfo
 import com.example.dotan.MatchDetailsResponse
 import com.example.dotan.OpenDotaService
 import com.example.dotan.PlayerMatch
@@ -27,4 +28,7 @@ class OpenDotaRepositoryImpl @Inject constructor(
         return openDotaService.getMatchDetails(matchId)
     }
 
+    override suspend fun getHeroes(): List<HeroInfo> {
+        return openDotaService.getHeroes()
+    }
 }

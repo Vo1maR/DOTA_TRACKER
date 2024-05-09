@@ -18,11 +18,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.dotan.repository.OpenDotaRepositoryImpl
 import com.example.dotan.ui.theme.DotanTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.runBlocking
-
-val heroMap = runBlocking { buildHeroMap() }
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {

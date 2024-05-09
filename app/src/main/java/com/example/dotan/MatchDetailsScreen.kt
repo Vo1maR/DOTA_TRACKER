@@ -27,8 +27,9 @@ fun MatchDetailsScreen(navController: NavHostController, matchId: Long?) {
     val viewModel: PlayerViewModel = hiltViewModel()
     LaunchedEffect(matchId) {
         viewModel.getMatchDetails(matchId!!)
+        viewModel.getHeroes()
     }
-
+    val heroMap = viewModel.heroesInfo.collectAsState().value
     val matchDetails = viewModel.matchDetails.collectAsState().value
 
     if (isLoading && matchDetails == null) {

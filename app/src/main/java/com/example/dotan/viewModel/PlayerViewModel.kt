@@ -2,6 +2,7 @@ package com.example.dotan.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.dotan.HeroInfo
 import com.example.dotan.MatchDetailsResponse
 import com.example.dotan.PlayerMatch
 import com.example.dotan.PlayerResponse
@@ -30,6 +31,8 @@ class PlayerViewModel @Inject constructor(
     private val _matchDetails = MutableStateFlow<MatchDetailsResponse?>(null)
     val matchDetails = _matchDetails.asStateFlow()
 
+    private val _heroesInfo = MutableStateFlow<Map<Int, HeroInfo>>(emptyMap())
+    val heroesInfo = _heroesInfo.asStateFlow()
     fun getPlayerData(accountId: Int) {
         viewModelScope.launch {
             try {
@@ -74,5 +77,22 @@ class PlayerViewModel @Inject constructor(
         }
     }
 
-    // ... Add other functions for fetching and processing data as needed ...
+    fun getHeroes() {
+        viewModelScope.launch {
+            try {
+                val heroData = try {
+                    repository.getHeroes()
+                } catch (e: Exception) {
+                    emptyList()
+                }
+                _heroesInfo.value = heroData.associateBy(
+                    { it.id },
+                    { HeroInfo(it.id, localized_name = it.localized_name, primary_attr = it.primary_attr, img = "https://cdn.dota2.com${it.img}") }
+                )
+            } catch (e: Exception) {
+                // Handle error
+                println("Error fetching match details: ${e.message}")
+            }
+        }
+    }
 }

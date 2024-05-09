@@ -1,5 +1,6 @@
 package com.example.dotan.repository
 
+import com.example.dotan.HeroInfo
 import com.example.dotan.MatchDetailsResponse
 import com.example.dotan.PlayerMatch
 import com.example.dotan.PlayerResponse
@@ -10,4 +11,5 @@ interface OpenDotaRepository {
     suspend fun getPlayerWinLoss(accountId: Int, limit: Int = 20): PlayerWinLossResponse
     suspend fun getPlayerMatches(accountId: Int, limit: Int = 20): List<PlayerMatch>
     suspend fun getMatchDetails(matchId: Long): MatchDetailsResponse
+    suspend fun getHeroes(): List<HeroInfo>
 }

@@ -126,18 +126,6 @@ data class PlayerProfile(val accountId: Int, val name: String)
 data class PlayerSummaryResponse(
     val profile: Player // Assuming Player data class from previous steps
 )
-suspend fun buildHeroMap(): Map<Int, HeroInfo>
-{
-    val heroData = try {
-        openDotaService.getHeroes()
-    } catch (e: Exception) {
-        emptyList()
-    }
-    return heroData.associateBy(
-        { it.id },
-        { HeroInfo(it.id, localized_name = it.localized_name, primary_attr = it.primary_attr, img = "https://cdn.dota2.com${it.img}") }
-    )
-}
 
 
 
