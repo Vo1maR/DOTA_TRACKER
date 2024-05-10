@@ -17,17 +17,15 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
-import com.android.volley.toolbox.ImageRequest
 import com.example.dotan.viewModel.PlayerViewModel
-import kotlinx.coroutines.launch
-import openDotaService
+
 
 @Composable
 fun PlayerInfoScreen(navController: NavHostController, accountId: String?) {
     val viewModel: PlayerViewModel = hiltViewModel()
     LaunchedEffect(accountId) {
         viewModel.getPlayerData(accountId!!.toInt())
-        viewModel.getPlayerWinLoss(accountId!!.toInt())
+        viewModel.getPlayerWinLoss(accountId.toInt())
     }
 
     Log.d("player", viewModel.getPlayerData(accountId!!.toInt()).toString())
@@ -37,7 +35,7 @@ fun PlayerInfoScreen(navController: NavHostController, accountId: String?) {
     }
     var isLoading by remember { mutableStateOf(true) }
 
-    var winLossInfo = viewModel.winLossInfo.collectAsState().value
+    val winLossInfo = viewModel.winLossInfo.collectAsState().value
     val sharedPreferences = LocalContext.current.getSharedPreferences("favorites", Context.MODE_PRIVATE)
     var isFavorite by remember { mutableStateOf(sharedPreferences.contains("favorite_account_id_${accountId}")) }
 
