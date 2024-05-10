@@ -68,19 +68,19 @@ fun PlayerInfoScreen(navController: NavHostController, accountId: String?) {
             }
             Button(onClick = {
                 isFavorite = !isFavorite
-                val editor = sharedPreferences.edit()
+
                 if (isFavorite && accountId != null && playerInfo != null) {
-                    editor.putInt("favorite_account_id_${playerInfo!!.profile.account_id}",
-                        playerInfo!!.profile.account_id
-                    )
+                    viewModel.addFavoriteAccount(playerInfo.profile.account_id,
+                        playerInfo?.profile?.personaname,
+                        playerInfo?.profile?.avatar)
                     Log.d("EditorValueAdded", playerInfo!!.profile.account_id.toString())
                     playerInfo!!.profile.personaname?.let { Log.d("id", it) }
                 } else {
-                    editor.remove("favorite_account_id_${playerInfo!!.profile.account_id}")
+                    viewModel.deleteFavoriteAccount(playerInfo.profile.account_id,
+                        playerInfo?.profile?.personaname,
+                        playerInfo?.profile?.avatar)
                     Log.d("EditorValueRemoved", "0")
                 }
-                editor.apply()
-                Log.d("EditorValue", editor.toString())
             }) {
                 Text(if (isFavorite) "Remove from Favorites" else "Add to Favorites")
             }
