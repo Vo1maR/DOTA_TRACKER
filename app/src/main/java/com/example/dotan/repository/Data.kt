@@ -1,10 +1,4 @@
-package com.example.dotan
-
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import openDotaService
+package com.example.dotan.repository
 
 data class Player(
     val account_id: Int,

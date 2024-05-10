@@ -1,18 +1,18 @@
-package com.example.dotan.viewModel
+package com.example.dotan.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.dotan.FavoriteAccount
-import com.example.dotan.HeroInfo
-import com.example.dotan.MatchDetailsResponse
-import com.example.dotan.PlayerMatch
-import com.example.dotan.PlayerResponse
-import com.example.dotan.PlayerWinLossResponse
+import com.example.dotan.repository.FavoriteAccount
+import com.example.dotan.repository.HeroInfo
+import com.example.dotan.repository.MatchDetailsResponse
+import com.example.dotan.repository.PlayerMatch
+import com.example.dotan.repository.PlayerResponse
+import com.example.dotan.repository.PlayerWinLossResponse
 import com.example.dotan.repository.FavoriteAccountDao
 import com.example.dotan.repository.OpenDotaRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -39,6 +39,7 @@ class PlayerViewModel @Inject constructor(
 
     private val _favoriteAccounts = MutableStateFlow(emptyList<FavoriteAccount>())
     val favoriteAccounts = _favoriteAccounts.asStateFlow()
+
 
     init {
         // Fetch favorite accounts when ViewModel is initialized
@@ -144,5 +145,9 @@ class PlayerViewModel @Inject constructor(
                 _favoriteAccounts.value = accounts
             }
         }
+    }
+
+    fun isFavorite(accountId: Int): Flow<FavoriteAccount> {
+        return favoriteAccountDao.isFavorite(accountId)
     }
 }

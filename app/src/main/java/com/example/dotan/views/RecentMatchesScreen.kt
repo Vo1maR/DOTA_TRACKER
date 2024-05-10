@@ -1,4 +1,4 @@
-package com.example.dotan
+package com.example.dotan.views
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.materialIcon
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,8 +25,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
-import com.example.dotan.viewModel.PlayerViewModel
-import openDotaService
+import com.example.dotan.repository.HeroInfo
+import com.example.dotan.repository.PlayerMatch
+import com.example.dotan.heroMap
+import com.example.dotan.viewModels.PlayerViewModel
 
 @Composable
 fun RecentMatchesScreen(navController: NavHostController, accountId: String?) {

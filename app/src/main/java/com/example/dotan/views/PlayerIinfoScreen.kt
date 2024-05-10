@@ -1,7 +1,6 @@
-package com.example.dotan
+package com.example.dotan.views
 
 import android.content.Context
-import android.graphics.Picture
 import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -17,17 +16,15 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
-import com.android.volley.toolbox.ImageRequest
-import com.example.dotan.viewModel.PlayerViewModel
-import kotlinx.coroutines.launch
-import openDotaService
+import com.example.dotan.viewModels.PlayerViewModel
+
 
 @Composable
 fun PlayerInfoScreen(navController: NavHostController, accountId: String?) {
     val viewModel: PlayerViewModel = hiltViewModel()
     LaunchedEffect(accountId) {
         viewModel.getPlayerData(accountId!!.toInt())
-        viewModel.getPlayerWinLoss(accountId!!.toInt())
+        viewModel.getPlayerWinLoss(accountId.toInt())
     }
 
     Log.d("player", viewModel.getPlayerData(accountId!!.toInt()).toString())
@@ -37,9 +34,8 @@ fun PlayerInfoScreen(navController: NavHostController, accountId: String?) {
     }
     var isLoading by remember { mutableStateOf(true) }
 
-    var winLossInfo = viewModel.winLossInfo.collectAsState().value
-    val sharedPreferences = LocalContext.current.getSharedPreferences("favorites", Context.MODE_PRIVATE)
-    var isFavorite by remember { mutableStateOf(sharedPreferences.contains("favorite_account_id_${accountId}")) }
+    val winLossInfo = viewModel.winLossInfo.collectAsState().value
+    val isFavorite by viewModel.isFavorite(accountId!!.toInt()).collectAsState(initial = false)
 
 
     if (isLoading && playerInfo == null) {
@@ -67,9 +63,7 @@ fun PlayerInfoScreen(navController: NavHostController, accountId: String?) {
                 )
             }
             Button(onClick = {
-                isFavorite = !isFavorite
-
-                if (isFavorite && accountId != null && playerInfo != null) {
+                if (isFavorite == null) {
                     viewModel.addFavoriteAccount(playerInfo.profile.account_id,
                         playerInfo?.profile?.personaname,
                         playerInfo?.profile?.avatar)
@@ -82,7 +76,7 @@ fun PlayerInfoScreen(navController: NavHostController, accountId: String?) {
                     Log.d("EditorValueRemoved", "0")
                 }
             }) {
-                Text(if (isFavorite) "Remove from Favorites" else "Add to Favorites")
+                Text(if (isFavorite != null) "Remove from Favorites" else "Add to Favorites")
             }
             Text("Account ID: ${playerInfo?.profile?.account_id}")
             Text("Player Name: ${playerInfo?.profile?.personaname ?: "Unknown"}")
