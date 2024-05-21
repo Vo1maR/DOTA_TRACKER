@@ -19,7 +19,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
-import com.example.dotan.viewModel.PlayerViewModel
+import com.example.dotan.viewModels.PlayerViewModel
+
 
 @Composable
 fun PlayerInfoScreen(navController: NavHostController, accountId: String?) {
@@ -37,8 +38,8 @@ fun PlayerInfoScreen(navController: NavHostController, accountId: String?) {
     var isLoading by remember { mutableStateOf(true) }
 
     val winLossInfo = viewModel.winLossInfo.collectAsState().value
-    val sharedPreferences = LocalContext.current.getSharedPreferences("favorites", Context.MODE_PRIVATE)
-    var isFavorite by remember { mutableStateOf(sharedPreferences.contains("favorite_account_id_${accountId}")) }
+    val isFavorite by viewModel.isFavorite(accountId!!.toInt()).collectAsState(initial = false)
+
 
     if (isLoading && playerInfo == null) {
         Box(
@@ -168,9 +169,7 @@ fun PlayerInfoScreen(navController: NavHostController, accountId: String?) {
 
             Button(
                 onClick = {
-                    isFavorite = !isFavorite
-
-                    if (isFavorite && accountId != null && playerInfo != null) {
+                    if (isFavorite == null && accountId != null) {
                         viewModel.addFavoriteAccount(
                             playerInfo.profile.account_id,
                             playerInfo.profile.personaname,
@@ -192,7 +191,7 @@ fun PlayerInfoScreen(navController: NavHostController, accountId: String?) {
                     .padding(bottom = 8.dp)
             ) {
                 Text(
-                    if (isFavorite) "Remove from Favorites" else "Add to Favorites",
+                    if (isFavorite != null) "Remove from Favorites" else "Add to Favorites",
                     style = TextStyle(fontSize = 20.sp)
                 )
             }

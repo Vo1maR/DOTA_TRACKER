@@ -1,5 +1,11 @@
-package com.example.dotan
+package com.example.dotan.repository
 
+import com.example.dotan.repository.HeroInfo
+import com.example.dotan.repository.MatchDetailsResponse
+import com.example.dotan.repository.PlayerMatch
+import com.example.dotan.repository.PlayerResponse
+import com.example.dotan.repository.PlayerSummaryResponse
+import com.example.dotan.repository.PlayerWinLossResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query

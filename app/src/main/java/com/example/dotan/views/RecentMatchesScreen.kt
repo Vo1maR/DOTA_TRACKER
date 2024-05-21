@@ -1,4 +1,4 @@
-package com.example.dotan
+package com.example.dotan.views
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -16,8 +16,10 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
-import com.example.dotan.viewModel.PlayerViewModel
-import openDotaService
+import com.example.dotan.repository.HeroInfo
+import com.example.dotan.repository.PlayerMatch
+import com.example.dotan.heroMap
+import com.example.dotan.viewModels.PlayerViewModel
 
 @Composable
 fun RecentMatchesScreen(navController: NavHostController, accountId: String?) {

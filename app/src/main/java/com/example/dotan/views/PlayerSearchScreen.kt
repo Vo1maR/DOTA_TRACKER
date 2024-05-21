@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
-import com.example.dotan.viewModel.PlayerViewModel
+import com.example.dotan.viewModels.PlayerViewModel
 
 @Composable
 fun PlayerSearchScreen(navController: NavHostController) {

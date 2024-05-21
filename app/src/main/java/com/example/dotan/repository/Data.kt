@@ -1,4 +1,4 @@
-package com.example.dotan
+package com.example.dotan.repository
 
 data class Player(
     val account_id: Int,

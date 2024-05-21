@@ -1,6 +1,5 @@
 package com.example.dotan.repository
 
-import com.example.dotan.OpenDotaService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
