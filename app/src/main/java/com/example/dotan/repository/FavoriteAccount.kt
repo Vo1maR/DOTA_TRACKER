@@ -1,4 +1,4 @@
-package com.example.dotan
+package com.example.dotan.repository
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

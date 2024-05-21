@@ -1,16 +1,11 @@
 package com.example.dotan.repository
 
-import com.example.dotan.HeroInfo
-import com.example.dotan.MatchDetailsResponse
-import com.example.dotan.OpenDotaService
-import com.example.dotan.PlayerMatch
-import com.example.dotan.PlayerResponse
-import com.example.dotan.PlayerWinLossResponse
 import javax.inject.Inject
 
 
 class OpenDotaRepositoryImpl @Inject constructor(
-    private val openDotaService: OpenDotaService) : OpenDotaRepository {
+    private val openDotaService: OpenDotaService
+) : OpenDotaRepository {
 
     override suspend fun getPlayerInfo(accountId: Int): PlayerResponse {
         return openDotaService.getPlayerInfo(accountId)

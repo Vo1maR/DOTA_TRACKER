@@ -1,7 +1,6 @@
 package com.example.dotan.repository
 
 import androidx.room.*
-import com.example.dotan.FavoriteAccount
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -15,4 +14,7 @@ interface FavoriteAccountDao {
 
     @Delete
     suspend fun deleteFavoriteAccount(account: FavoriteAccount)
+
+    @Query("SELECT * FROM favorite_accounts WHERE account_id = :accountId")
+    fun isFavorite(accountId: Int): Flow<FavoriteAccount>
 }

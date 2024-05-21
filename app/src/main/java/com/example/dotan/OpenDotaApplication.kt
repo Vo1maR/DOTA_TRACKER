@@ -1,6 +1,7 @@
 package com.example.dotan
 
 import android.app.Application
+import com.example.dotan.repository.HeroInfo
 import com.example.dotan.repository.OpenDotaRepository
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
