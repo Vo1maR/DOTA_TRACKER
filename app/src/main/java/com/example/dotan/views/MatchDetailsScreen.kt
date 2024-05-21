@@ -1,6 +1,7 @@
 package com.example.dotan.views
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -72,10 +73,12 @@ fun MatchDetailsScreen(navController: NavHostController, matchId: Long?) {
             items(matchDetails.players.take(5)) { player ->
                 val heroInfo: HeroInfo? = heroMap[player.hero_id]
                 PlayerInfoCard(
+                    player.account_id ?: 0,
                     player.personaname ?: "Unknown",
                     heroInfo?.localized_name ?: "",
                     heroInfo?.img ?: "",
-                    "${player.kills}/${player.deaths}/${player.assists}"
+                    "${player.kills}/${player.deaths}/${player.assists}",
+                    navController
                 )
             }
 
@@ -94,10 +97,12 @@ fun MatchDetailsScreen(navController: NavHostController, matchId: Long?) {
             items(matchDetails.players.drop(5)) { player ->
                 val heroInfo: HeroInfo? = heroMap[player.hero_id]
                 PlayerInfoCard(
+                    player.account_id ?: 0,
                     player.personaname ?: "Unknown",
                     heroInfo?.localized_name ?: "",
                     heroInfo?.img ?: "",
-                    "${player.kills}/${player.deaths}/${player.assists}"
+                    "${player.kills}/${player.deaths}/${player.assists}",
+                    navController
                 )
             }
         }
@@ -126,11 +131,18 @@ fun MatchInfoCard(title: String, value: String) {
 }
 
 @Composable
-fun PlayerInfoCard(playerName: String, heroName: String, heroImg: String, kda: String) {
+fun PlayerInfoCard(playerId: Int,playerName: String, heroName: String, heroImg: String, kda: String, navController: NavHostController) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp),
+            .padding(vertical = 4.dp)
+            .then(
+                if (playerId != 0) {
+                    Modifier.clickable { navController.navigate("player_info/${playerId.toString()}") }
+                } else {
+                    Modifier
+                }
+            ),
         shape = RoundedCornerShape(8.dp)
     ) {
         Row(
