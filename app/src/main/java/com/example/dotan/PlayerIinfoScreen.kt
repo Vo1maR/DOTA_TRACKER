@@ -66,7 +66,7 @@ fun PlayerInfoScreen(navController: NavHostController, accountId: String?) {
                     ),
                     contentDescription = "Player Avatar",
                     modifier = Modifier
-                        .size(300.dp)
+                        .size(200.dp)
                         .padding(bottom = 8.dp)
                 )
             }
