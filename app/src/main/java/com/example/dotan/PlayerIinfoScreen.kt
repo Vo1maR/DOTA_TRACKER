@@ -1,24 +1,25 @@
 package com.example.dotan
 
 import android.content.Context
-import android.graphics.Picture
 import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Text
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
 import com.example.dotan.viewModel.PlayerViewModel
-
 
 @Composable
 fun PlayerInfoScreen(navController: NavHostController, accountId: String?) {
@@ -39,7 +40,6 @@ fun PlayerInfoScreen(navController: NavHostController, accountId: String?) {
     val sharedPreferences = LocalContext.current.getSharedPreferences("favorites", Context.MODE_PRIVATE)
     var isFavorite by remember { mutableStateOf(sharedPreferences.contains("favorite_account_id_${accountId}")) }
 
-
     if (isLoading && playerInfo == null) {
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -50,7 +50,11 @@ fun PlayerInfoScreen(navController: NavHostController, accountId: String?) {
     } else if (playerInfo != null) {
         isLoading = false
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             imageUri?.let { uri ->
                 Image(
@@ -61,44 +65,156 @@ fun PlayerInfoScreen(navController: NavHostController, accountId: String?) {
                         }
                     ),
                     contentDescription = "Player Avatar",
-                    modifier = Modifier.size(128.dp) // Adjust size as needed
+                    modifier = Modifier
+                        .size(300.dp)
+                        .padding(bottom = 8.dp)
                 )
             }
-            Button(onClick = {
-                isFavorite = !isFavorite
-
-                if (isFavorite && accountId != null && playerInfo != null) {
-                    viewModel.addFavoriteAccount(playerInfo.profile.account_id,
-                        playerInfo?.profile?.personaname,
-                        playerInfo?.profile?.avatar)
-                    Log.d("EditorValueAdded", playerInfo!!.profile.account_id.toString())
-                    playerInfo!!.profile.personaname?.let { Log.d("id", it) }
-                } else {
-                    viewModel.deleteFavoriteAccount(playerInfo.profile.account_id,
-                        playerInfo?.profile?.personaname,
-                        playerInfo?.profile?.avatar)
-                    Log.d("EditorValueRemoved", "0")
+            Text(
+                text = playerInfo.profile.personaname ?: "Unknown Player",
+                style = TextStyle(fontSize = 40.sp),
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
+            Card(
+                modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                shape = RoundedCornerShape(8.dp),
+                border = BorderStroke(1.dp, Color.Gray)
+            ) {
+                Column(modifier = Modifier.padding(8.dp)) {
+                    Text(
+                        text = "Account ID:",
+                        style = TextStyle(fontSize = 18.sp, color = Color.Gray),
+                        modifier = Modifier.padding(bottom = 4.dp)
+                    )
+                    Text(
+                        text = "${playerInfo.profile.account_id}",
+                        style = TextStyle(fontSize = 18.sp),
+                        modifier = Modifier.padding(bottom = 4.dp)
+                    )
                 }
-            }) {
-                Text(if (isFavorite) "Remove from Favorites" else "Add to Favorites")
             }
-            Text("Account ID: ${playerInfo?.profile?.account_id}")
-            Text("Player Name: ${playerInfo?.profile?.personaname ?: "Unknown"}")
-            Text("Country: ${playerInfo?.profile?.loccountrycode ?: "Unknown"}")
-            Text("Rank: ${playerInfo?.rank_tier ?: "Unknown"}")
+            Card(
+                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                shape = RoundedCornerShape(8.dp),
+                border = BorderStroke(1.dp, Color.Gray)
+            ) {
+                Column(modifier = Modifier.padding(8.dp)) {
+                    Text(
+                        text = "Country:",
+                        style = TextStyle(fontSize = 18.sp, color = Color.Gray),
+                        modifier = Modifier.padding(bottom = 4.dp)
+                    )
+                    Text(
+                        text = playerInfo.profile.loccountrycode ?: "Unknown",
+                        style = TextStyle(fontSize = 18.sp),
+                        modifier = Modifier.padding(bottom = 4.dp)
+                    )
+                }
+            }
+            Card(
+                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                shape = RoundedCornerShape(8.dp),
+                border = BorderStroke(1.dp, Color.Gray)
+            ) {
+                Column(modifier = Modifier.padding(8.dp)) {
+                    Text(
+                        text = "Rank:",
+                        style = TextStyle(fontSize = 18.sp, color = Color.Gray),
+                        modifier = Modifier.padding(bottom = 4.dp)
+                    )
+                    Text(
+                        text = playerInfo.rank_tier?.toString() ?: "Unknown",
+                        style = TextStyle(fontSize = 18.sp),
+                        modifier = Modifier.padding(bottom = 4.dp)
+                    )
+                }
+            }
             winLossInfo?.let {
-                Text("Wins: ${it.win}, Losses: ${it.lose}")
+                Card(
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                    shape = RoundedCornerShape(8.dp),
+                    border = BorderStroke(1.dp, Color.Gray)
+                ) {
+                    Column(modifier = Modifier.padding(8.dp)) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = "Wins:",
+                                style = TextStyle(fontSize = 18.sp, color = Color.Gray)
+                            )
+                            Text(
+                                text = "${it.win}",
+                                style = TextStyle(fontSize = 18.sp)
+                            )
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = "Losses:",
+                                style = TextStyle(fontSize = 18.sp, color = Color.Gray)
+                            )
+                            Text(
+                                text = "${it.lose}",
+                                style = TextStyle(fontSize = 18.sp)
+                            )
+                        }
+                    }
+                }
             }
-            Spacer(modifier = Modifier.height(16.dp))
 
-            Button(onClick = {
-                navController.navigate("recent_matches/$accountId")
-            }) {
-                Text("View Recent Matches")
+            Button(
+                onClick = {
+                    isFavorite = !isFavorite
+
+                    if (isFavorite && accountId != null && playerInfo != null) {
+                        viewModel.addFavoriteAccount(
+                            playerInfo.profile.account_id,
+                            playerInfo.profile.personaname,
+                            playerInfo.profile.avatar
+                        )
+                        Log.d("EditorValueAdded", playerInfo.profile.account_id.toString())
+                        playerInfo.profile.personaname?.let { Log.d("id", it) }
+                    } else {
+                        viewModel.deleteFavoriteAccount(
+                            playerInfo.profile.account_id,
+                            playerInfo.profile.personaname,
+                            playerInfo.profile.avatar
+                        )
+                        Log.d("EditorValueRemoved", "0")
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp)
+            ) {
+                Text(
+                    if (isFavorite) "Remove from Favorites" else "Add to Favorites",
+                    style = TextStyle(fontSize = 20.sp)
+                )
+            }
+
+            Button(
+                onClick = {
+                    navController.navigate("recent_matches/$accountId")
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    "View Recent Matches",
+                    style = TextStyle(fontSize = 20.sp)
+                )
             }
         }
     } else {
-        // Display error message if playerInfo is null
-        Text("Error: Player information not found")
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text("Error: Player information not found", style = TextStyle(fontSize = 40.sp))
+        }
     }
 }
